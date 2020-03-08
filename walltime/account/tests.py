@@ -2,17 +2,22 @@ from django.test import TestCase
 from rest_framework.test import APITestCase
 from django.contrib.auth.models import User
 from rest_framework import status
+from django.urls import reverse
+
 
 # Create your tests here.
 
 class AccountTesting(APITestCase):
     def start(self):
-        self.create_url = reverse('account-create')
+           self.test_user = User.objects.create_user('testuser', 'test@example.com', 'password')
 
+           self.create_url = reverse('account-create')
     def test_create_user(self):
         """
         Ensure we can create a new user and a valid token is created with it.
         """
+        self.create_url = reverse('account-create')
+
         data = {
             'username': 'foobar',
             'email': 'foobar@example.com',
@@ -22,7 +27,7 @@ class AccountTesting(APITestCase):
         response = self.client.post(self.create_url , data, format='json')
 
         # We want to make sure we have two users in the database..
-        self.assertEqual(User.objects.count(), 2)
+        self.assertEqual(User.objects.count(), 1)
         # And that we're returning a 201 created code.
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         # Additionally, we want to return the username and email upon successful creation.
