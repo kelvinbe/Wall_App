@@ -9,6 +9,10 @@ from rest_framework import renderers
 from rest_framework.decorators import api_view
 from wall.permissions import IsOwnerOrReadOnly
 from rest_framework import permissions
+from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth.models import User
+from rest_framework.generics import CreateAPIView
+from rest_framework.permissions import AllowAny
 
 
 
@@ -33,6 +37,14 @@ def api_root(request, format=None):
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+    def perform_create(self, serializer):
+            serializer.save(User)
+
+class CreateUserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    permissions_classes = (AllowAny,)
     serializer_class = UserSerializer
 
 
