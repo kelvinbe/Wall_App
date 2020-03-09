@@ -19,7 +19,7 @@ class MessageSerializer(serializers.HyperlinkedModelSerializer):
         instance.save()
         return instance
 
-        class Meta:
+    class Meta:
             model = Message
             fields = ['title', 'message', 'posted', 'author']
 
