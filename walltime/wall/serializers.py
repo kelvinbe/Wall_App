@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from wall.models import Message
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
+from django.contrib.auth import authenticate
 
 
 
@@ -23,15 +25,27 @@ class MessageSerializer(serializers.HyperlinkedModelSerializer):
             model = Message
             fields = ['title', 'message', 'posted', 'author']
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
-    message = serializers.HyperlinkedRelatedField(many=True, view_name='user-detail', read_only=True)
-    password = serializers.CharField(write_only=True)
+
+
+class RegisterSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField()
+    password = serializers.CharField(required=True)
+    confirm_password = serializers.CharField(write_only = True)
 
     def create(self, validated_data):
-        user = User.objects.create_user(username = validated_data['username'],email= validated_data['email'], password=validated_data['password'])
-        user.save()
+        user = User.objects.create_user(username= validated_data['username'],email= validated_data['email'], password=validated_data['password'])
+
         return user
 
     class Meta:
                 model = User
-                fields = ['id', 'username', 'message','password', 'email']
+                fields = ['id','username','email','password','confirm_password']
+
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField()
+    def validate(self, data):
+        user = authenticate(**data)
+        if user and user.is_active:
+            return user
+        raise serializers.ValidationError("Incorrect Credentials")
