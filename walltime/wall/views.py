@@ -27,6 +27,16 @@ class MessageViewSet(viewsets.ModelViewSet):
 
 def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+        message_list = MessageViewSet.as_view({
+        'get': 'list',
+        'post': 'create'
+        })
+        message_detail = MessageViewSet.as_view({
+        'get': 'retrieve',
+        'put': 'update',
+        'patch': 'partial_update',
+        'delete': 'destroy'
+        })
 
 @api_view(['GET'])
 def api_root(request, format=None):
@@ -43,6 +53,9 @@ class Regsitration(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception = True)
         user = serializer.save()
+        send_mail = {
+        
+        }
         return Response({
         "user": RegisterSerializer(user, context = self.get_serializer_context()).data,
         "token": AuthToken.objects.create(user)[1]
@@ -60,16 +73,11 @@ class Login(generics.GenericAPIView):
             "token": AuthToken.objects.create(user)[1]
             })
 
+class GetUser(generics.RetrieveAPIView):
+    permission_classes = [
+        permissions.IsAuthenticated,
+    ]
+    serializer_class = RegisterSerializer
 
-
-
-message_list = MessageViewSet.as_view({
-    'get': 'list',
-    'post': 'create'
-})
-message_detail = MessageViewSet.as_view({
-    'get': 'retrieve',
-    'put': 'update',
-    'patch': 'partial_update',
-    'delete': 'destroy'
-})
+    def get_object(self):
+        return self.request.user
