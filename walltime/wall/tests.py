@@ -29,9 +29,6 @@ class RegistrationTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
 
-
-
-
     class LogInTest(APITestCase):
         def setUp(self):
             self.credentials = {
