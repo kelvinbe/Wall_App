@@ -128,3 +128,9 @@ REST_FRAMEWORK = {
     ),
 
 }
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER ='kelvinbeno526@gmail.com'
+EMAIL_HOST_PASSWORD = 'Makovuproject1'
+EMAIL_PORT = 587

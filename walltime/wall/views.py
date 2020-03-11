@@ -1,10 +1,12 @@
 from django.shortcuts import render
 from rest_framework import viewsets
+from django.core.mail import send_mail
 from rest_framework.reverse import reverse
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.contrib.auth import authenticate
 from wall.models import Message
+from walltime.settings import EMAIL_HOST, EMAIL_PORT, EMAIL_HOST_USER, EMAIL_HOST_PASSWORD
 from wall.serializers import MessageSerializer, RegisterSerializer, User,LoginSerializer
 from rest_framework import renderers
 from rest_framework.decorators import api_view
@@ -16,6 +18,7 @@ from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 from knox.models import AuthToken
+import socket
 
 
 
@@ -53,9 +56,10 @@ class Regsitration(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception = True)
         user = serializer.save()
-        send_mail = {
-        
-        }
+        send_mail(subject= "Welcome to wall",
+        message="We welcome you to the wall application",
+        from_email=EMAIL_HOST_USER, recipient_list=[user.email],
+        fail_silently=False)
         return Response({
         "user": RegisterSerializer(user, context = self.get_serializer_context()).data,
         "token": AuthToken.objects.create(user)[1]
