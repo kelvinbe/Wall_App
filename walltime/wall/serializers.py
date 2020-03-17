@@ -4,9 +4,6 @@ from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.contrib.auth import authenticate
 
-
-
-
 class MessageSerializer(serializers.HyperlinkedModelSerializer):
     author = serializers.ReadOnlyField(source='author.username')
     def create(self, validated_data):
@@ -15,7 +12,7 @@ class MessageSerializer(serializers.HyperlinkedModelSerializer):
 
     def update(self, instance, validated_data):
         instance.title = validated_data.get('title', instance.title)
-        instance.message = validated_data.get('message', instance.message)
+        instance.description = validated_data.get('description', instance.message)
         instance.posted= validated_data.get('posted', instance.posted)
         instance.author = validated_data.get('author', instance.author)
         instance.save()
@@ -23,14 +20,13 @@ class MessageSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
             model = Message
-            fields = ['title', 'message', 'posted', 'author']
+            fields = ['id', 'title', 'description', 'posted', 'author']
 
 
 
 class RegisterSerializer(serializers.ModelSerializer):
     email = serializers.EmailField()
     password = serializers.CharField(required=True)
-    confirm_password = serializers.CharField(write_only = True)
 
     def create(self, validated_data):
         user = User.objects.create_user(username= validated_data['username'],email= validated_data['email'], password=validated_data['password'])
@@ -39,7 +35,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
                 model = User
-                fields = ['id','username','email','password','confirm_password']
+                fields = ['id','username','email','password']
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()

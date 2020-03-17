@@ -37,12 +37,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'rest_framework',
     'knox',
     'wall.apps.WallConfig',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -131,6 +133,9 @@ REST_FRAMEWORK = {
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER ='kelvinbeno526@gmail.com'
-EMAIL_HOST_PASSWORD = 'Makovuproject1'
+EMAIL_HOST_USER ='wallapplicatin234@gmail.com'
+EMAIL_HOST_PASSWORD = 'umpalumpa1234'
 EMAIL_PORT = 587
+
+
+CORS_ORIGIN_ALLOW_ALL = True
