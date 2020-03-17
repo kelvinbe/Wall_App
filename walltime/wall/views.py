@@ -25,11 +25,12 @@ import socket
 class MessageViewSet(viewsets.ModelViewSet):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
-                          IsOwnerOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
+
         message_list = MessageViewSet.as_view({
         'get': 'list',
         'post': 'create'
