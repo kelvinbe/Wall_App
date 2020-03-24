@@ -12,7 +12,7 @@ class MessageSerializer(serializers.HyperlinkedModelSerializer):
 
     def update(self, instance, validated_data):
         instance.title = validated_data.get('title', instance.title)
-        instance.description = validated_data.get('description', instance.message)
+        instance.description = validated_data.get('description', instance.description)
         instance.posted= validated_data.get('posted', instance.posted)
         instance.author = validated_data.get('author', instance.author)
         instance.save()
@@ -22,6 +22,12 @@ class MessageSerializer(serializers.HyperlinkedModelSerializer):
             model = Message
             fields = ['id', 'title', 'description', 'posted', 'author']
 
+class UserSerializer(serializers.ModelSerializer):
+    description = serializers.PrimaryKeyRelatedField(many=True, queryset=Message.objects.all())
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'description']
 
 
 class RegisterSerializer(serializers.ModelSerializer):
