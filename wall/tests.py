@@ -27,23 +27,18 @@ class RegistrationTest(APITestCase):
 
 
 class LogInTest(APITestCase):
-     def login(self):
-         new_user1_data = {
+    def login(self):
+        client = APIClient()
+        new_user1_data = {
             "username": "dummy",
-            "first_name": "a",
-            "last_name": "dummy",
-            "password": "randompassword",
-            "email": "test@test.com",
+            "password": "ooo",
+            "email": "lee@gmail.com"
             }
-
-         new_user1 = User.objects.create_user(
+        new_user1 = User.objects.create_user(
             username=new_user1_data["username"],
-            first_name=new_user1_data["first_name"],
-            last_name=new_user1_data["last_name"],
             email=new_user1_data["email"],
             password=new_user1_data["password"]
             )
-         self.new_user = User.objects.create(user=new_user1)
-
-         response = self.client.post('/login', {'username': 'dummy', 'password': 'randompassword'}, format='json')
-         self.assertEqual(response.status_code, 200)
+        self.new_user = User.objects.create(user=new_user1)
+        response = self.client.post('/login', {'username': 'dummy', 'password': 'ooo'}, format='json')
+        self.assertEqual(response.status_code, 200)

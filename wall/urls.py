@@ -3,7 +3,7 @@ from rest_framework.routers import DefaultRouter
 from wall import views
 from django.contrib.auth.models import User
 from knox import views as knox_views
-from wall.views import Regsitration, Login, GetUser, MessageViewSet
+from wall.views import Regsitration, Login, UserList, MessageViewSet, UserDetail
 
 
 
@@ -18,5 +18,7 @@ urlpatterns = [
     path('api/auth', include('knox.urls')),
     path('register', Regsitration.as_view()),
     path('login', Login.as_view()),
-    path('users', GetUser.as_view())
+    path('users/', views.UserList.as_view()),
+    path('users/<int:pk>/', views.UserDetail.as_view()),
+
 ]

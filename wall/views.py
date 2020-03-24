@@ -18,19 +18,18 @@ from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 from knox.models import AuthToken
-import socket
+from wall.serializers import UserSerializer
 
 
 
 class MessageViewSet(viewsets.ModelViewSet):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-
-def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
-
-
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
+                          IsOwnerOrReadOnly]
+                          
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
         message_list = MessageViewSet.as_view({
         'get': 'list',
         'post': 'create'
@@ -49,6 +48,15 @@ def api_root(request, format=None):
     })
 
 
+
+class UserList(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+class UserDetail(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 
 class Regsitration(generics.GenericAPIView):
@@ -78,11 +86,4 @@ class Login(generics.GenericAPIView):
             "token": AuthToken.objects.create(user)[1]
             })
 
-class GetUser(generics.RetrieveAPIView):
-    permission_classes = [
-        permissions.IsAuthenticated,
-    ]
-    serializer_class = RegisterSerializer
 
-    def get_object(self):
-        return self.request.user
