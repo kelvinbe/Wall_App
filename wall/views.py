@@ -1,21 +1,13 @@
 from rest_framework import viewsets
 from django.core.mail import send_mail
 from rest_framework.reverse import reverse
-from rest_framework.decorators import action
 from rest_framework.response import Response
-from django.contrib.auth import authenticate
 from wall.models import Message
-from walltime.settings import EMAIL_HOST, EMAIL_PORT, EMAIL_HOST_USER, EMAIL_HOST_PASSWORD
+from walltime.settings import EMAIL_HOST_USER
 from wall.serializers import MessageSerializer, RegisterSerializer, User, LoginSerializer
-from rest_framework import renderers
 from rest_framework.decorators import api_view
 from wall.permissions import IsOwnerOrReadOnly
 from rest_framework import permissions, generics
-from rest_framework.permissions import IsAuthenticated
-from django.contrib.auth.models import User
-from rest_framework.generics import CreateAPIView
-from rest_framework.permissions import AllowAny
-from rest_framework.views import APIView
 from knox.models import AuthToken
 from wall.serializers import UserSerializer
 
