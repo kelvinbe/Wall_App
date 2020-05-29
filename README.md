@@ -4,8 +4,10 @@
 
 ## Clone Repository
 
-## Run Pipenv install to install required dependencies
+## cd into Wall_App
 
-## Run Pipenv shell to start up the virtual environment
+## Run pipenv install to install required dependencies
+
+## Run pipenv shell to start up the virtual environment
 
 ## Run python manage.py runserver to start up the API
